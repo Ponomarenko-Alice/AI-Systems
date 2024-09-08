@@ -22,8 +22,8 @@ change_creature_health(C, NewH) :-
     assertz(creature_health(C, NewH)),
     write(C), write("'s health changed to "), write(NewH), nl.
 
-witcher_bag('Gerald', [potion1, potion3, oil2, bomb2, bomb3]).
-witcher_bag('Leto', [potion1, potion2, oil1, bomb1, bomb2]).
+witcher_bag('Gerald', ['potion1', 'potion3', 'oil2', 'bomb2', 'bomb3']).
+witcher_bag('Leto', ['potion1', 'potion2', 'oil1', 'bomb1', 'bomb2']).
 
 try_to_use(W, X) :-
     witcher_bag(W, A),
@@ -39,7 +39,7 @@ creature('c').
 creature('d').
 creature('e').
 
-creature_type(a, a1).
+creature_type('a', a1).
 creature_type(b, a1).
 creature_type(c, a2).
 creature_type(d, a2).
@@ -73,14 +73,14 @@ bomb_against_creature(bomb1, a1).
 bomb_against_creature(bomb2, a2).
 bomb_against_creature(bomb3, a2).
 
-addition(potion1).
-addition(potion2).
-addition(potion3).
-addition(oil1).
-addition(oil2).
-addition(bomb1).
-addition(bomb2).
-addition(bomb3).
+addition('potion1').
+addition('potion2').
+addition('potion3').
+addition('oil1').
+addition('oil2').
+addition('bomb1').
+addition('bomb2').
+addition('bomb3').
 
 use_addition(potion1, W) :-
     witcher_health(W, X),
