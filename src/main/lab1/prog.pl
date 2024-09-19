@@ -23,8 +23,8 @@ creature_type('Drowner', necrophage).
 creature_health('Fiend', 100).
 creature_health('Leshen', 200).
 creature_health('Ghoul', 350).
-creature_health('Alghoul', 400).
-creature_health('Drowner', 460).
+creature_health('Alghoul', 360).
+creature_health('Drowner', 400).
 
 addition(potion1).
 addition(potion2).
@@ -46,20 +46,22 @@ bomb_against_creature(bomb2, relict).
 bomb_against_creature(bomb3, necrophage).
 
 % Сhecking that all Witchers died
-failed_fight(Ws) :- (Ws == []), !.
+failed_fight(Ws) :- (Ws == []).
 
 % The main recursive predicate of fight between all witchers and creatures.
 % The fight is finished if the list of creatures is empty.
-fight(_, [], Solution).
-fight(Witchers, Creatures, Solution) :-
+fight(_, []).
+fight(Witchers, Creatures) :-
     member(Witcher, Witchers),            
     member(Creature, Creatures),
     witcher_health(Witcher, WH),
     creature_health(Creature, CH),
 	witcher_bag(Witcher, Bag),
     (fight_round(Witcher, Creature, WH, CH, 0, Bag) ->  
-    excl(Creature, Creatures, NewCreatures);
-    excl(Witcher, Witchers, NewWitchers)
+    excl(Creature, Creatures, NewCreatures),
+        write(Witcher), write(WH), write(' wins '), write(Creature), write(CH), nl;
+    excl(Witcher, Witchers, NewWitchers),
+        write(Creature), write(CH), write(' wins '), write(Witcher), write(WH), nl
     ),
     not(failed_fight(NewWitchers)),
     fight(NewWitchers, NewCreatures). % Continue the fight with updated lists
@@ -116,6 +118,3 @@ use_addition(bomb3, WHealth, WHealth, CHealth, NewCHealth, Bag, NewBag) :-
 excl(_, [], []).
 excl(H, [H|T], T).
 excl(X, [H|T], [H|TT]) :- excl(X, T, TT).
-
-append([], Ys, Ys).
-append([X|Xs], Ys, [X|Zs]) :- append(Xs, Ys, Zs).
