@@ -1,5 +1,3 @@
-% Knowledge bases
-
 witcher('Gerald').
 witcher('Leto').
 
@@ -9,7 +7,7 @@ witcher_health('Leto', 150).
 witcher_bag('Gerald', [potion1, potion3, bomb2, bomb3]).
 witcher_bag('Leto', [potion1, potion2, bomb1, bomb3]).
 
-%bestiary
+% Bestiary
 creature('Fiend').
 creature('Leshen').
 creature('Ghoul').
@@ -35,18 +33,24 @@ addition(bomb1).
 addition(bomb2).
 addition(bomb3).
 
+% Potions that act against certain types of creatures.
+% Increase the witchers' health
 potion_against_creature(potion1, relict).
 potion_against_creature(potion2, necrophage).
 potion_against_creature(potion3, necrophage).
 
+% Bombs that act against certain types of creatures.
+% Decrease the creatures' health
 bomb_against_creature(bomb1, relict).
 bomb_against_creature(bomb2, relict).
 bomb_against_creature(bomb3, necrophage).
 
-failed_fight(Ws, _) :- (Ws == []), !.
+% Сhecking that all Witchers died
+failed_fight(Ws) :- (Ws == []), !.
 
-% Бой
-fight(_, [], Solution). % Если список существ пуст, бой окончен
+% The main recursive predicate of fight between all witchers and creatures.
+% The fight is finished if the list of creatures is empty.
+fight(_, [], Solution).
 fight(Witchers, Creatures, Solution) :-
     member(Witcher, Witchers),            
     member(Creature, Creatures),
@@ -57,30 +61,32 @@ fight(Witchers, Creatures, Solution) :-
     excl(Creature, Creatures, NewCreatures);
     excl(Witcher, Witchers, NewWitchers)
     ),
-    not(failed_fight(NewWitchers, NewCreatures)),
-    fight(NewWitchers, NewCreatures).  % Continue the fight with updated lists
+    not(failed_fight(NewWitchers)),
+    fight(NewWitchers, NewCreatures). % Continue the fight with updated lists
 
-% Основное рекурсивное правило боя
+% The recursive fight between certain witcher and creature.
+% Returns true if the Witcher wins in this fight, otherwise returns false.
+% In one fight, the Witcher can't use more than 3 additions due to high intoxication.
 fight_round(Witcher, Creature, WH, CH, Intox, Bag) :-
-    WH > CH, !; % Если здоровье ведьмака больше, он выигрывает
-    Intox < 3, % Если интоксикация меньше 3, можно использовать добавку
-    find_addition(Bag, Creature, Addition), % Находим подходящую добавку против существа
-    use_addition(Addition, WH, NewWH, CH, NewCH, Bag, NewBag), % Применяем добавку и обновляем здоровье
-    NewIntox is Intox + 1, % Увеличиваем интоксикацию
-    fight_round(Witcher, Creature, NewWH, NewCH, NewIntox, NewBag). % Продолжаем бой с обновленными значениями
+    WH > CH, !; % If the witcher's health is higher, he wins
+    Intox < 3,
+    find_addition(Bag, Creature, Addition), 
+    use_addition(Addition, WH, NewWH, CH, NewCH, Bag, NewBag), 
+    NewIntox is Intox + 1, 
+    fight_round(Witcher, Creature, NewWH, NewCH, NewIntox, NewBag). % Continue the fight with updated values
 
-% Если интоксикация больше или равна 3 и здоровье существа больше, ведьмак проигрывает
+% If intoxication is greater than or equal to 3 and the creature's health is greater, the witcher loses
 fight_round(_, _, _, CH, 3, _) :-
     CH > 0, !, fail.
 
-% Поиск подходящей добавки для существа
+% Finding the right addition for a fight with creature. 
+% Certain additions are suitable for specific creatures.
 find_addition([Addition|_], Creature, Addition) :-
     creature_type(Creature, CType),
     (potion_against_creature(Addition, CType); bomb_against_creature(Addition, CType)), !.
 
 find_addition([_|Rest], Creature, Addition) :-
     find_addition(Rest, Creature, Addition).
-
 
 use_addition(potion1, WHealth, NewHealth, CHealth, CHealth, Bag, NewBag) :-
     NewHealth is WHealth + 100,
@@ -110,3 +116,6 @@ use_addition(bomb3, WHealth, WHealth, CHealth, NewCHealth, Bag, NewBag) :-
 excl(_, [], []).
 excl(H, [H|T], T).
 excl(X, [H|T], [H|TT]) :- excl(X, T, TT).
+
+append([], Ys, Ys).
+append([X|Xs], Ys, [X|Zs]) :- append(Xs, Ys, Zs).
