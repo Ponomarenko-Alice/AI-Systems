@@ -46,8 +46,8 @@ bomb_against_creature(bomb3, necrophage).
 failed_fight(Ws, _) :- (Ws == []), !.
 
 % Бой
-fight(_, []). % Если список существ пуст, бой окончен
-fight(Witchers, Creatures) :-
+fight(_, [], Solution). % Если список существ пуст, бой окончен
+fight(Witchers, Creatures, Solution) :-
     member(Witcher, Witchers),            
     member(Creature, Creatures),
     witcher_health(Witcher, WH),
@@ -81,8 +81,6 @@ find_addition([Addition|_], Creature, Addition) :-
 find_addition([_|Rest], Creature, Addition) :-
     find_addition(Rest, Creature, Addition).
 
-% Пример использования правила fight_round
-
 
 use_addition(potion1, WHealth, NewHealth, CHealth, CHealth, Bag, NewBag) :-
     NewHealth is WHealth + 100,
@@ -92,10 +90,9 @@ use_addition(potion2, WHealth, NewHealth, CHealth, CHealth, Bag, NewBag) :-
     NewHealth is WHealth * 1.5,
     excl(potion2, Bag, NewBag).
 
-
 use_addition(potion3, WHealth, NewHealth, CHealth, CHealth, Bag, NewBag) :-
     NewHealth is WHealth + 150,
-    excl(potion3, Bag, NewBag).
+    excl(potion3, Bag, NewBag), !.
 
 use_addition(bomb1, WHealth, WHealth, CHealth, NewCHealth, Bag, NewBag) :-
     NewCHealth is CHealth - 50,
@@ -107,7 +104,7 @@ use_addition(bomb2, WHealth, WHealth, CHealth, NewCHealth, Bag, NewBag) :-
 
 use_addition(bomb3, WHealth, WHealth, CHealth, NewCHealth, Bag, NewBag) :-
     NewCHealth is CHealth - 100,
-    excl(bomb3, Bag, NewBag).
+    excl(bomb3, Bag, NewBag), !.
 
 % Utils
 excl(_, [], []).
