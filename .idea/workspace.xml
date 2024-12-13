@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f325676f-7a78-4152-a8ea-529c449da16b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/lab1/prog.prolog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/lab1/prog.prolog.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +60,8 @@
       <workItem from="1725654075377" duration="1383000" />
       <workItem from="1725660696597" duration="2000" />
       <workItem from="1725794600113" duration="1180000" />
+      <workItem from="1726667762707" duration="32000" />
+      <workItem from="1726667800050" duration="137000" />
     </task>
     <servers />
   </component>
